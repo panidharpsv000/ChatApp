@@ -26,18 +26,15 @@ public class RoomController {
         this.roomRepository = roomRepository;
     }
 
-    //create room
     @PostMapping
     public ResponseEntity<?> createRoom(@RequestBody String roomId) {
 
         if (roomRepository.findByRoomId(roomId) != null) {
-            //room is already there
             return ResponseEntity.badRequest().body("Room already exists!");
 
         }
 
 
-        //create new room
         Room room = new Room();
         room.setRoomId(roomId);
         Room savedRoom = roomRepository.save(room);
@@ -47,7 +44,6 @@ public class RoomController {
     }
 
 
-    //get room: join
     @GetMapping("/{roomId}")
     public ResponseEntity<?> joinRoom(
             @PathVariable String roomId
@@ -62,8 +58,6 @@ public class RoomController {
     }
 
 
-    //get messages of room
-
     @GetMapping("/{roomId}/messages")
     public ResponseEntity<List<Message>> getMessages(
             @PathVariable String roomId,
@@ -75,8 +69,6 @@ public class RoomController {
             return ResponseEntity.badRequest().build()
                     ;
         }
-        //get messages :
-        //pagination
         List<Message> messages = room.getMessages();
         int start = Math.max(0, messages.size() - (page + 1) * size);
         int end = Math.min(messages.size(), start + size);
