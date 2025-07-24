@@ -24,10 +24,8 @@ public class ChatController {
         this.roomRepository = roomRepository;
     }
 
-
-    //for sending and receiving messages
-    @MessageMapping("/sendMessage/{roomId}")// /app/sendMessage/roomId
-    @SendTo("/topic/room/{roomId}")//subscribe
+    @MessageMapping("/sendMessage/{roomId}")
+    @SendTo("/topic/room/{roomId}")
     public Message sendMessage(
             @DestinationVariable String roomId,
             @RequestBody MessageRequest request
@@ -39,6 +37,7 @@ public class ChatController {
         message.setSender(request.getSender());
         message.setTimeStamp(LocalDateTime.now());
         if (room != null) {
+        	message.setRoom(room);
             room.getMessages().add(message);
             roomRepository.save(room);
         } else {
